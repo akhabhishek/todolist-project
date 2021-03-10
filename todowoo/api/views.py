@@ -11,3 +11,15 @@ class TodoCompletedList(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return Todo.objects.filter(user=user, datecompleted__isnull=False).order_by('-datecompleted')
+
+
+class TodoListCreate(generics.ListCreateAPIView):
+    serializer_class = TodoSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Todo.objects.filter(user=user, datecompleted__isnull=True)
+
+    def perform_create(self, seriliazer):
+        serializer.save(self.request.user)
